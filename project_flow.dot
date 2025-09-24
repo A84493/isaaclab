@@ -1,0 +1,24 @@
+digraph ProjectFlow {
+    graph [rankdir=LR, bgcolor="white"];
+    node [shape=rectangle, style="rounded,filled", fillcolor="#f5f5f5", color="#555555", fontname="Helvetica", fontsize=12];
+    edge [color="#888888", penwidth=1.2, arrowsize=0.8];
+
+    Start [label="Start\nTracked source files"];
+    AddScript [label="Auto inject placeholders\nadd_chinese_comments.py"];
+    UpdateScript [label="Generate contextual notes\nupdate_chinese_comments.py"];
+    Review [label="Manual review & refine\nDomain experts"];
+    Output [label="Repository with curated\nChinese annotations", fillcolor="#d9f0ff", color="#2a6f97"];
+
+    Start -> AddScript -> UpdateScript -> Review -> Output;
+
+    subgraph cluster_checks {
+        label = "Validation checkpoints";
+        color = "#cbd5e1";
+        style = "rounded";
+        DryRun1 [label="Dry-run counts\n(--dry-run)"];
+        DryRun2 [label="Spot-check diff\nrg \"核心说明\""];
+    }
+
+    AddScript -> DryRun1;
+    UpdateScript -> DryRun2;
+}
